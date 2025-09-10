@@ -40,7 +40,7 @@ const PROFILES = [
     role: "Fullstack Developer – System You Solution Co., Ltd., Fullstack Developer – theclassxury",
     bio: "Fullstack Developer with experience in building both Frontend and Backend applications, worked with System You Solution Co., Ltd. and theclassxury.",
     image: "https://studentscms.spu.ac.th/stdempimg.cfm?empstdtype=STD&vdata=0AD3CCE3D485FAA50529CFD7DC01C9D182E11706D6F6D6D5",
-    tags: ["NextJS","ReactJS","Node","ExpressJS","E-commerce", "Software House"],
+    tags: ["NextJS","Node","Software House"],
   },
 ];
 
