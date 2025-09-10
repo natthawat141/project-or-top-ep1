@@ -1,13 +1,12 @@
 "use client";
 import { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Profile from "./components/profile";
 
-// Register GSAP plugins
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
@@ -15,103 +14,50 @@ if (typeof window !== 'undefined') {
 export default function Home() {
   const heroRef = useRef(null);
   const starsRef = useRef(null);
-  const floatingRef = useRef(null);
   const textRef = useRef(null);
 
+  // Simple parallax with useScroll
+  const { scrollYProgress } = useScroll();
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const starsY = useTransform(scrollYProgress, [0, 1], ["0%", "-20%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
+
   useEffect(() => {
-    // Initialize AOS
     AOS.init({
-      duration: 1500,
+      duration: 1000,
       once: false,
-      offset: 100,
+      offset: 50,
     });
 
-    // Create animated stars
     if (starsRef.current) {
-      gsap.set('.home-star', { opacity: 0 });
       gsap.to('.home-star', {
-        opacity: 1,
-        stagger: 0.05,
-        duration: 2,
-        ease: "power2.out",
-        delay: 0.5
-      });
-
-      gsap.to('.home-star', {
-        opacity: 0.3,
-        stagger: 0.1,
+        opacity: 0.6,
+        stagger: 0.02,
         repeat: -1,
         yoyo: true,
-        duration: 3,
+        duration: 2,
         ease: "sine.inOut",
-        repeatDelay: 0.5
       });
     }
 
-    // Floating animations
-    if (floatingRef.current) {
-      const floatingElements = floatingRef.current.querySelectorAll('.floating-element');
-      
-      floatingElements.forEach((element, index) => {
-        gsap.to(element, {
-          y: -30,
-          duration: 3 + (index * 0.5),
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          delay: index * 0.3
-        });
-      });
-    }
-
-    // Text reveal animation
     if (textRef.current) {
-      const timeline = gsap.timeline();
-      
-      timeline
-        .from('.hero-title', {
-          y: 100,
-          opacity: 0,
-          duration: 1.2,
-          ease: "power3.out"
-        })
-        .from('.hero-subtitle', {
-          y: 50,
-          opacity: 0,
-          duration: 1,
-          ease: "power2.out"
-        }, "-=0.5")
-        .from('.hero-description', {
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power2.out"
-        }, "-=0.3")
-        .from('.hero-buttons', {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          ease: "power2.out"
-        }, "-=0.2");
+      gsap.fromTo('.hero-title', 
+        { y: 50, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1, ease: "power2.out" }
+      );
+      gsap.fromTo('.hero-subtitle', 
+        { y: 30, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8, delay: 0.2, ease: "power2.out" }
+      );
+      gsap.fromTo('.hero-description', 
+        { y: 20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.6, delay: 0.4, ease: "power2.out" }
+      );
+      gsap.fromTo('.hero-buttons', 
+        { y: 15, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.5, delay: 0.6, ease: "power2.out" }
+      );
     }
-
-    // Scroll-triggered animations
-    ScrollTrigger.create({
-      trigger: heroRef.current,
-      start: "top center",
-      end: "bottom center",
-      scrub: true,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        if (starsRef.current) {
-          gsap.to('.home-star', {
-            y: progress * -100,
-            duration: 0.3,
-            ease: "none"
-          });
-        }
-      }
-    });
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -124,121 +70,140 @@ export default function Home() {
       <section 
         ref={heroRef}
         className="relative min-h-screen overflow-hidden flex items-center justify-center"
+        style={{
+          background: 'radial-gradient(ellipse at top, #1a123b 0%, #0a0a20 50%, #000000 100%)'
+        }}
       >
-        {/* Animated Background Stars */}
-        <div 
-          ref={starsRef}
+        {/* Parallax Background */}
+        <motion.div 
           className="absolute inset-0 z-0"
+          style={{ y: backgroundY }}
         >
-          {[...Array(100)].map((_, i) => (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a20] via-[#1a123b] to-[#2a1810] opacity-80"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/10 via-purple-900/20 to-pink-900/10"></div>
+        </motion.div>
+
+        {/* Parallax Stars */}
+        <motion.div 
+          ref={starsRef}
+          className="absolute inset-0 z-10"
+          style={{ y: starsY }}
+        >
+          {Array.from({ length: 50 }, (_, i) => (
             <div 
               key={i}
-              className="home-star absolute rounded-full"
+              className="home-star absolute rounded-full bg-white"
               style={{
-                width: Math.random() * 4 + 1 + 'px',
-                height: Math.random() * 4 + 1 + 'px',
+                width: Math.random() * 3 + 1 + 'px',
+                height: Math.random() * 3 + 1 + 'px',
                 top: Math.random() * 100 + '%',
                 left: Math.random() * 100 + '%',
-                backgroundColor: `hsl(${Math.random() * 60 + 200}, 70%, ${Math.random() * 30 + 70}%)`,
-                boxShadow: `0 0 ${Math.random() * 10 + 5}px currentColor`
+                opacity: Math.random() * 0.6 + 0.2,
+                boxShadow: `0 0 ${Math.random() * 6 + 3}px white`
               }}
             />
           ))}
+        </motion.div>
+
+        {/* Floating Elements */}
+        <div className="absolute inset-0 z-15">
+          <motion.div 
+            className="absolute top-20 left-[10%] w-20 h-20 rounded-full border border-purple-400/30 bg-gradient-to-r from-blue-400/15 to-purple-600/15 backdrop-blur-sm opacity-20"
+            animate={{ rotate: 360, y: [0, -15, 0] }}
+            transition={{ 
+              rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+              y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
+          
+          <motion.div 
+            className="absolute top-40 right-[15%] w-16 h-16 rounded-full border border-cyan-400/25 bg-gradient-to-r from-cyan-500/20 to-blue-500/20 backdrop-blur-sm opacity-25"
+            animate={{ rotate: -360, x: [0, 10, 0] }}
+            transition={{ 
+              rotate: { duration: 25, repeat: Infinity, ease: "linear" },
+              x: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
+
+          <motion.div 
+            className="absolute bottom-32 left-[20%] w-24 h-24 rounded-full border border-pink-400/20 bg-gradient-to-r from-pink-400/10 to-purple-600/10 backdrop-blur-sm opacity-15"
+            animate={{ rotate: 360, scale: [1, 1.1, 1] }}
+            transition={{ 
+              rotate: { duration: 30, repeat: Infinity, ease: "linear" },
+              scale: { duration: 6, repeat: Infinity, ease: "easeInOut" }
+            }}
+          />
         </div>
 
-        {/* Gradient Background Layers */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a0a20] via-[#1a123b] to-[#2a1810] z-10"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-black/20 z-20"></div>
-
-        {/* Floating Decorative Elements */}
-        <div ref={floatingRef} className="absolute inset-0 z-20">
-          <motion.div 
-            className="floating-element absolute top-20 left-[10%] opacity-20"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+        {/* Parallax Main Content */}
+        <motion.div 
+          ref={textRef} 
+          className="relative z-30 text-center px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto"
+          style={{ y: textY }}
+        >
+          {/* CSI 205 Badge */}
+          <motion.div
+            className="inline-block mb-6 sm:mb-8 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-400/30 backdrop-blur-sm"
+            whileHover={{ 
+              scale: 1.05,
+              boxShadow: "0 0 20px rgba(168, 85, 247, 0.4)"
+            }}
           >
-            <div className="w-24 h-24 rounded-full border-2 border-blue-400 bg-gradient-to-r from-blue-400/20 to-purple-600/20 backdrop-blur-sm"></div>
+            <span className="text-sm sm:text-base font-semibold text-purple-300">
+              CSI 205 - Computer Science inovation
+            </span>
           </motion.div>
 
-          <motion.div 
-            className="floating-element absolute top-40 right-[15%] opacity-25"
-            animate={{ rotate: -360 }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="w-16 h-16 rounded-full border border-purple-400 bg-gradient-to-r from-purple-500/30 to-pink-500/30 backdrop-blur-sm"></div>
-          </motion.div>
-
-          <motion.div 
-            className="floating-element absolute bottom-32 left-[20%] opacity-15"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="w-32 h-32 rounded-full border-2 border-cyan-400 bg-gradient-to-r from-cyan-400/10 to-blue-600/10 backdrop-blur-sm"></div>
-          </motion.div>
-
-          <motion.div 
-            className="floating-element absolute bottom-20 right-[25%] opacity-20"
-            animate={{ rotate: -360 }}
-            transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-          >
-            <div className="w-20 h-20 rounded-full border border-pink-400 bg-gradient-to-r from-pink-500/25 to-purple-500/25 backdrop-blur-sm"></div>
-          </motion.div>
-        </div>
-
-        {/* Main Content */}
-        <div ref={textRef} className="relative z-30 text-center px-8 max-w-6xl mx-auto">
           {/* Main Title */}
-          <motion.h1 
-            className="hero-title text-7xl md:text-8xl lg:text-9xl font-black mb-6 leading-none"
+          <h1 
+            className="hero-title text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black mb-4 sm:mb-6 leading-none"
             style={{
               background: 'linear-gradient(135deg, #60a5fa 0%, #a855f7 25%, #ec4899 50%, #f59e0b 75%, #10b981 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               backgroundClip: 'text',
-              filter: 'drop-shadow(0 0 20px rgba(168, 85, 247, 0.5))'
+              filter: 'drop-shadow(0 0 15px rgba(168, 85, 247, 0.4))'
             }}
           >
             WELCOME
-          </motion.h1>
+          </h1>
 
           {/* Subtitle */}
-          <motion.h2 
-            className="hero-subtitle text-2xl md:text-4xl lg:text-5xl font-bold text-white mb-8"
+          <h2 
+            className="hero-subtitle text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-6 sm:mb-8"
             style={{
-              textShadow: '0 0 30px rgba(96, 165, 250, 0.8)'
+              textShadow: '0 0 20px rgba(96, 165, 250, 0.6)'
             }}
           >
             To The Future of
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 mt-2">
-              Digital Innovation
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-cyan-400 mt-1 sm:mt-2">
+              Web Development
             </span>
-          </motion.h2>
+          </h2>
 
           {/* Description */}
-          <motion.p 
-            className="hero-description text-lg md:text-xl text-[#d6d6f7] max-w-3xl mx-auto mb-12 leading-relaxed"
+          <p 
+            className="hero-description text-sm sm:text-base md:text-lg lg:text-xl text-[#d6d6f7] max-w-3xl mx-auto mb-8 sm:mb-12 leading-relaxed px-2"
             style={{
-              textShadow: '0 0 10px rgba(214, 214, 247, 0.3)'
+              textShadow: '0 0 8px rgba(214, 214, 247, 0.2)'
             }}
           >
-            Experience the next generation of web applications with cutting-edge design, 
-            immersive animations, and revolutionary user experiences that push the boundaries 
-            of what's possible in the digital realm.
-          </motion.p>
+            กานบ้านรายวิชา Computer Science Interface ที่แสดงทักษะการพัฒนาเว็บแอปพลิเคชัน
+            ด้วย Next.js, React และเทคโนโลยีสมัยใหม่ พร้อมเอฟเฟกต์และแอนิเมชันที่น่าประทับใจ
+          </p>
 
-          {/* Action Buttons */}
-          <motion.div 
-            className="hero-buttons flex flex-col sm:flex-row gap-6 justify-center items-center"
-          >
+          {/* Buttons */}
+          <div className="hero-buttons flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center">
             <motion.button
-              className="group relative px-10 py-4 text-lg font-bold text-white overflow-hidden rounded-full bg-gradient-to-r from-blue-600 to-purple-700 shadow-lg"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              style={{
-                boxShadow: '0 10px 40px rgba(168, 85, 247, 0.4), 0 0 20px rgba(96, 165, 250, 0.3)'
+              className="w-full sm:w-auto group relative px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-base sm:text-lg font-bold text-white overflow-hidden rounded-full bg-gradient-to-r from-blue-600 to-purple-700 shadow-lg"
+              whileHover={{ 
+                scale: 1.05,
+                boxShadow: "0 10px 40px rgba(168, 85, 247, 0.4)"
               }}
+              whileTap={{ scale: 0.95 }}
             >
-              <span className="relative z-10">Explore Now</span>
+              <span className="relative z-10">View Team</span>
               <motion.div
                 className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600"
                 initial={{ x: '-100%' }}
@@ -248,57 +213,57 @@ export default function Home() {
             </motion.button>
 
             <motion.button
-              className="group relative px-10 py-4 text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 border-2 border-cyan-400 rounded-full backdrop-blur-sm overflow-hidden"
+              className="w-full sm:w-auto group relative px-6 sm:px-8 lg:px-10 py-3 sm:py-4 text-base sm:text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 border-2 border-cyan-400/60 rounded-full backdrop-blur-sm overflow-hidden"
               whileHover={{ 
                 scale: 1.05,
-                borderColor: '#a855f7',
-                boxShadow: '0 0 30px rgba(168, 85, 247, 0.6)'
+                borderColor: 'rgba(168, 85, 247, 0.8)',
+                boxShadow: '0 0 24px rgba(168, 85, 247, 0.4)'
               }}
               whileTap={{ scale: 0.95 }}
             >
               <span className="relative z-10">Learn More</span>
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 to-purple-600/20"
+                className="absolute inset-0 bg-gradient-to-r from-cyan-500/15 to-purple-600/15"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
                 transition={{ duration: 0.3 }}
               />
             </motion.button>
-          </motion.div>
+          </div>
 
           {/* Scroll Indicator */}
           <motion.div 
-            className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-            animate={{ y: [0, 10, 0] }}
+            className="hidden sm:block absolute bottom-8 lg:bottom-10 left-1/2 transform -translate-x-1/2"
+            animate={{ y: [0, 8, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center">
+            <div className="w-5 h-8 lg:w-6 lg:h-10 border-2 border-white/25 rounded-full flex justify-center">
               <motion.div 
-                className="w-1 h-3 bg-gradient-to-b from-blue-400 to-purple-600 rounded-full mt-2"
-                animate={{ y: [0, 12, 0] }}
+                className="w-1 h-2 lg:h-3 bg-gradient-to-b from-blue-400 to-purple-600 rounded-full mt-1.5 lg:mt-2"
+                animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
               />
             </div>
           </motion.div>
-        </div>
+        </motion.div>
 
-        {/* Animated Particles */}
+        {/* Floating Particles */}
         <div className="absolute inset-0 z-25 pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {Array.from({ length: 10 }, (_, i) => (
             <motion.div
               key={i}
-              className="absolute w-1 h-1 bg-white rounded-full opacity-60"
+              className="absolute w-1 h-1 bg-white rounded-full opacity-40"
               style={{
                 top: Math.random() * 100 + '%',
                 left: Math.random() * 100 + '%',
               }}
               animate={{
-                y: [0, -100, 0],
-                opacity: [0, 1, 0],
+                y: [0, -60, 0],
+                opacity: [0, 0.6, 0],
                 scale: [0, 1, 0]
               }}
               transition={{
-                duration: Math.random() * 3 + 2,
+                duration: Math.random() * 4 + 3,
                 repeat: Infinity,
                 delay: Math.random() * 2,
                 ease: "easeInOut"
@@ -309,15 +274,9 @@ export default function Home() {
       </section>
 
       {/* Profile Section */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        viewport={{ once: false }}
-      >
+      <div className="relative">
         <Profile />
-      </motion.div>
-
+      </div>
     </>
   );
 }
