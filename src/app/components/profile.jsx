@@ -9,8 +9,8 @@ import 'aos/dist/aos.css';
 const PROFILES = [
   {
     name: "Natthawat Sawatdee",
-    role: "MD & Head of Technology @ 2Read",
-    bio: "Startup-minded engineer. Focused on AI, EdTech, and shipping fast.",
+    role: "Acting managing director 2Read ",
+    bio: "Acting managing director 2Read ,Group Vice president of technology 2morrow group Startup-minded engineer. Focused on AI, EdTech, and shipping fast.",
     image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC0K01ieSFHHBioUbpnvAsBLhAkwJFBge3Dg&s`,
     tags: ["AI", "Next.js", "EdTech"],
   },

@@ -134,7 +134,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
   const courseInfo = [
     { title: "รายวิชา", content: "CSI 205 - Computer Science Interface" },
-    { title: "ภาคเรียน", content: "2/2567 (Spring 2025)" },
+    { title: "ภาคเรียน", content: "1/2568 " },
     { title: "หัวข้อ", content: "Web Development with Modern Frameworks" }
   ];
 
