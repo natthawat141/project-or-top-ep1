@@ -16,7 +16,7 @@ const PROFILES: Profile[] = [
     name: "Natthawat Sawatdee",
     role: "MD & Head of Technology @ 2Read",
     bio: "Startup-minded engineer. Focused on AI, EdTech, and shipping fast.",
-    image: "https://i.pravatar.cc/160?img=1",
+    image: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC0K01ieSFHHBioUbpnvAsBLhAkwJFBge3Dg&s`,
     tags: ["AI", "Next.js", "EdTech"],
   },
   {
