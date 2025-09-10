@@ -36,11 +36,11 @@ const PROFILES = [
     tags: ["Coding ปฐมวัย"],
   },
   {
-    name: "chock",
-    role: "Full-stack Developer",
-    bio: "Next.js, Node.js, Cloud-native. I turn ideas into products.",
-    image: "https://cdn.discordapp.com/attachments/1414953888531873884/1415320065171259483/stdempimg.png?ex=68c2c706&is=68c17586&hm=820e91035e9d7492c43f898d471b1cb27173615954224a36ca59a156dfcd1371&",
-    tags: ["Coding ปฐมวัย"],
+    name: "Chok",
+    role: "Fullstack Developer – System You Solution Co., Ltd., Fullstack Developer – theclassxury",
+    bio: "Fullstack Developer with experience in building both Frontend and Backend applications, worked with System You Solution Co., Ltd. and theclassxury.",
+    image: "https://studentscms.spu.ac.th/stdempimg.cfm?empstdtype=STD&vdata=0AD3CCE3D485FAA50529CFD7DC01C9D182E11706D6F6D6D5",
+    tags: ["NextJS","ReactJS","Node","ExpressJS","E-commerce", "Software House"],
   },
 ];
 
