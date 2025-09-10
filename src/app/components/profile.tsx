@@ -20,7 +20,7 @@ const PROFILES: Profile[] = [
     tags: ["AI", "Next.js", "EdTech"],
   },
   {
-    name: "Jane Doe",
+    name: "Cyn2",
     role: "Product Designer",
     bio: "Crafting accessible, delightful experiences for web & mobile.",
     image: "https://i.pravatar.cc/160?img=2",
