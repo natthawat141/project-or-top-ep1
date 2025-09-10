@@ -20,10 +20,10 @@ const PROFILES: Profile[] = [
     tags: ["AI", "Next.js", "EdTech"],
   },
   {
-    name: "Cyn2",
-    role: "Product Designer",
-    bio: "Crafting accessible, delightful experiences for web & mobile.",
-    image: "https://i.pravatar.cc/160?img=2",
+    name: "Kittiwat Kudan",
+    role: "Dek SPU CSI",
+    bio: "นั่งงงกับสคริปต์ เลยกระซิบหา Ai.",
+    image: "https://studentscms.spu.ac.th/stdempimg.cfm?empstdtype=STD&vdata=0CD4C4EFD78BFAA50529CFD6D800CCD282E4170DDFFFDDD3",
     tags: ["UX", "UI", "Figma"],
   },
   {
