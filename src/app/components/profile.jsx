@@ -29,11 +29,11 @@ const PROFILES = [
     tags: ["Coding ปฐมวัย"],
   },
   {
-    name: "kron",
+    name: "Thastanon kaisomsat",
     role: "Full-stack Developer",
-    bio: "กายพร้อมใจพร้อม.",
-    image: "",
-    tags: ["HTML""CSS"],
+    bio: "Full-stack Developer focusing on Frontend fundamentals and modern web technologies.",
+    image: "https://media.discordapp.net/attachments/1308781226806607997/1308782698806116352/pakorn.jpg?ex=68c2cb5f&is=68c179df&hm=09f8615be7a48dda417286ac27ad94ebe4f54302159817fb8510bcf89d801fe3&=&format=webp&width=528&height=838",
+    tags: ["React.js","TailwindCSS"],
   },
   {
     name: "Chok",
